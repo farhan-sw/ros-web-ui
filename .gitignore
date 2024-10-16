@@ -3,6 +3,9 @@
 *.key
 *.csr
 
+# Documentation
+/Documentation
+
 # Prerequisites
 *.d
 

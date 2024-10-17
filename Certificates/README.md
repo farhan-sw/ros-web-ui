@@ -1,1 +1,1 @@
-Place your SSL/TLS server keys and certificates in this directory.
+Place the SSL/TLS server keys and certificates in this directory.

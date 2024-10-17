@@ -1,6 +1,8 @@
 #!/bin/bash
 
+USERNAME="itbdelabo"
+
 docker run --rm -it \
 --network host \
--v $PWD/source:/ros-web-ui-ws/src \
+-v $PWD/Certificates:/home/$USERNAME/ros-web-ui-ws/src/ros-web-ui/source/aws_mqtt/certs/ \
 ros-container

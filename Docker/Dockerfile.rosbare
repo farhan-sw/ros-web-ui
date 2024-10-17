@@ -27,16 +27,27 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Mkdir for ROS workspace
-RUN mkdir -p /ros-web-ui-ws/src
+RUN mkdir -p "/home/$USERNAME/ros-web-ui-ws/src"
 
-# Add ROS Source to bashrc
-RUN echo "source /opt/ros/noetic/setup.bash" >> /home/$USERNAME/.bashrc
+# Clone the workspace and build it using catkin_make
+RUN cd "/home/$USERNAME/ros-web-ui-ws/src" \
+    && git clone https://github.com/farhan-sw/ros-web-ui.git \
+    && cd "/home/$USERNAME/ros-web-ui-ws" \
+    && /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make"
 
-# Add AWS IoT Bridge setup to bashrc
-RUN echo "source /home/$USERNAME/ros-aws-iot_bridge/install/setup.bash" >> /home/$USERNAME/.bashrc
+# Add ROS and workspace source to .bashrc
+RUN echo "source /opt/ros/noetic/setup.bash" >> "/home/$USERNAME/.bashrc" \
+    && echo "source /home/$USERNAME/ros-web-ui-ws/devel/setup.bash" >> "/home/$USERNAME/.bashrc"
 
-# Source Bashrc
-RUN echo "source /home/$USERNAME/.bashrc" >> /root/.bashrc
+# Add an alias to easily source .bashrc
+RUN echo "alias srcbashrc='source /home/$USERNAME/.bashrc'" >> "/home/$USERNAME/.bashrc"
+
+# Make sure the .bashrc file is executable and available to the user
+RUN chown $USERNAME:$USERNAME /home/$USERNAME/.bashrc \
+    && chmod +x /home/$USERNAME/.bashrc
+
+# Change user to non-root user
+USER $USERNAME
 
 # Default command
 CMD ["bash"]
